@@ -1,4 +1,5 @@
-import numpy as np #引入numpy包
+#导入numpy包
+import numpy as np 
 
 #创建一个(3,4)的二维矩阵
 a1 = np.array([(1,2,3,3), (4,5,6,6), (7,8,9,10)])
@@ -99,3 +100,129 @@ print("rint:", np.rint(a))  # 四舍五入
 a = np.array([16,31,12,28,22,31,48])
 a.sort()  # 排序
 print(a)
+
+#导入 pytorch包
+import torch
+
+#创建张量
+data = torch.tensor([[1,2,6],[3,4,9]], dtype=torch.float32) # 定义一个2*3的矩阵 
+print(data)
+
+import numpy as np
+
+#创建张量
+np_array = np.array([[1,2,6],[3,4,9]])
+data2 = torch.from_numpy(np_array)
+print(data2)
+
+# 通过已知张量维度，创建新张量
+data3 = torch.rand_like(data2, dtype=torch.float)
+print(data3)
+
+shape = (2,3,8)
+rand_tensor = torch.rand(shape)# 随机初始化
+ones_tensor = torch.ones(shape)# 全1初始化
+zeros_tensor = torch.zeros(shape)# 全0初始化
+
+print(f"Random Tensor: \n {rand_tensor} \n")
+print(f"Ones Tensor: \n {ones_tensor} \n")
+print(f"Zeros Tensor: \n {zeros_tensor}")
+
+# 基于现有tensor构建，但使用新值填充
+m = torch.ones(3,3, dtype=torch.double)
+n = torch.rand_like(m, dtype=torch.float)
+
+# 获取tensor的大小
+print(m.size()) # torch.Size([5,3])
+
+# 均匀分布
+# 每个元素是从 [0, 1) 之间的均匀分布中随机采样
+print(torch.rand(3,3))
+# 标准正态分布
+# 生成的值是从标准正态分布（均值为 0，标准差为 1）中采样的
+print(torch.randn(3,3))
+# 离散正态分布
+# 生成的值是从标准正态分布（均值为 0，标准差为 1）中采样的
+print(torch.normal(mean=.0,std=1.0,size=(5,3)))
+# 线性间隔向量(返回一个1维张量，包含在区间start和end上均匀间隔的steps个点)
+print(torch.linspace(start=1,end=10,steps=21))
+
+# 张量属性
+tensor = torch.rand(3,5)
+print(f"value of tensor: {tensor}")
+# 张量的形状、数据类型和存储设备
+print(f"Shape of tensor: {tensor.shape}")
+print(f"Datatype of tensor: {tensor.dtype}")
+print(f"Device tensor is stored on: {tensor.device}")
+
+
+# 检查pytorch是否支持GPU
+if torch.cuda.is_available():
+    device = torch.device("cuda")
+    tensor = tensor.to(device)
+
+print(tensor)
+print(tensor.device)
+
+# mac上没有GPU，使用M系列芯片
+if torch.backends.mps.is_available():
+    device = torch.device("mps")
+    tensor = tensor.to(device)
+
+print(tensor)
+print(tensor.device)
+
+# 张量的切片操作
+tensor = torch.tensor([[1,2,3],[4,5,6]])
+print('First row: ', tensor[0])
+print('First column: ', tensor[:, 0])
+print('Last column:', tensor[..., -1])
+tensor[:,1] = 0 # 把第二列的值全部变为0
+print(tensor)
+
+# 张量的拼接操作
+t1 = torch.cat([tensor, tensor, tensor], dim=1)
+print(t1)
+print(t1 * 3) # 张量的乘法
+print(t1.shape)
+
+
+import torch
+tensor = torch.arange(1,17, dtype=torch.float32).reshape(4, 4)
+
+# 计算两个张量之间矩阵乘法的几种方式。 y1, y2, y3 最后的值是一样的 dot
+y1 = tensor @ tensor.T
+y2 = tensor.matmul(tensor.T)
+
+print("y1",y1)
+print("y2",y2)
+
+y3 = torch.rand_like(tensor)
+torch.matmul(tensor, tensor.T, out=y3)
+print("y3",y3)
+
+
+# 计算张量逐元素相乘的几种方法。 z1, z2, z3 最后的值是一样的。
+z1 = tensor * tensor
+z2 = tensor.mul(tensor)
+
+z3 = torch.rand_like(tensor)
+torch.mul(tensor, tensor, out=z3)
+
+print(z1)
+print(z3)
+
+agg = tensor.sum() # 求和
+print(agg) #打印的是张量
+agg_item = agg.item() # 取pytorch中的值，转为python中的值
+print(agg_item, type(agg_item))
+
+np_arr = z1.numpy()# 张量转numpy
+print(np_arr)
+
+print(tensor, "\n")
+# 原地操作会直接修改原张量，因此使用时要小心，避免意外修改数据。
+tensor.add_(5)# 原地操作
+# tensor = tensor + 5 不会修改原张量
+# tensor += 5 不会修改原张量
+print(tensor)
